@@ -1,3 +1,5 @@
+# Wikipedia 라이브러리 내부에서 User-Agent 설정이 적용되지 않은 것입니다. (20260616 실행)
+
 from langchain.chat_models import init_chat_model
 from langchain_community.tools import WikipediaQueryRun
 from langchain_community.utilities import WikipediaAPIWrapper
@@ -16,6 +18,11 @@ if not os.getenv("OPENAI_API_KEY"):
         "OPENAI_API_KEY가 설정되지 않았습니다."
         "환경변수 또는 .env 파일에서 설정해주세요."
     )
+
+import wikipedia  # ← 추가
+
+# ↓ WikipediaAPIWrapper 초기화 전에 반드시 호출 - 한글 포함시 오류
+wikipedia.set_user_agent("AI-Agent-Engineering/1.0")
 
 api_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=300)
 tool = WikipediaQueryRun(api_wrapper=api_wrapper)

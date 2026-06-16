@@ -21,7 +21,8 @@ mcp_client = MultiServerMCPClient(
         },
         "weather": {
             # `python ch04/mcp_servers/MCP_weather_server.py`으로 MCP 서버를 먼저 실행합니다.
-            "url": "http://0.0.0.0:8000/mcp",
+            #"url": "http://0.0.0.0:8000/mcp",
+            "url": "http://127.0.0.1:8000/mcp",
             "transport": "streamable_http",
         },
     }

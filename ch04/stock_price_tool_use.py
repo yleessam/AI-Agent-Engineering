@@ -17,18 +17,32 @@ if not os.getenv("OPENAI_API_KEY"):
         "환경변수 또는 .env 파일에서 설정해주세요."
     )
 
+import yfinance as yf
+
+
 @tool
-def get_stock_price(ticker: str) -> float:
+def get_stock_price(ticker: str) -> str:
     """주식 시장 거래소 거래 티커에 대한 주식 가격을 가져옵니다."""
-    api_url = f"https://api.example.com/stocks/{ticker}"
     try:
-        response = requests.get(api_url)
-        if response.status_code == 200:
-            return response.json()["price"]
-        else:
-            return f"주식 가격을 가져오는데 실패했습니다: {ticker}"
-    except requests.exceptions.RequestException:
-        return f"주식 가격을 가져오는데 실패했습니다: {ticker}"
+        stock = yf.Ticker(ticker)
+        price = stock.fast_info["last_price"]
+        currency = stock.fast_info.get("currency", "USD")
+        return f"{ticker} 현재가: {price:.2f} {currency}"
+    except Exception as e:
+        return f"주식 가격을 가져오는데 실패했습니다: {ticker} ({e})"
+    
+# @tool
+# def get_stock_price(ticker: str) -> float:
+#     """주식 시장 거래소 거래 티커에 대한 주식 가격을 가져옵니다."""
+#     api_url = f"https://api.example.com/stocks/{ticker}"
+#     try:
+#         response = requests.get(api_url)
+#         if response.status_code == 200:
+#             return response.json()["price"]
+#         else:
+#             return f"주식 가격을 가져오는데 실패했습니다: {ticker}"
+#     except requests.exceptions.RequestException:
+#         return f"주식 가격을 가져오는데 실패했습니다: {ticker}"
 
 
 # LLM 초기화 및 도구 바인딩
